@@ -1,0 +1,15 @@
+/* the background color of the filepond drop area */
+div.filepond--panel-root {
+    background-color: #ff864c;
+    border: 2px dashed #ff491c;
+}
+
+.filepond--root {
+    max-height: 20em;
+}
+
+.filepond--drop-label {
+    color: #333;
+    font-size: 20px;
+}
+

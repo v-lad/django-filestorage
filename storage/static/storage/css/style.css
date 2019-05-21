@@ -1,0 +1,12 @@
+/* ul.files_list {
+    list-style-type: none !important;
+} */
+
+form div.dc div{
+    max-width: 400px !important;
+    margin: auto;
+}
+
+form div.dc{
+    text-align:center;
+}

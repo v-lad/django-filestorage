@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block page-title %}Sign up page{% endblock %}
+
+{% block stor-body %}
+<h2 class="mb-4">Register</h2>
+
+{% comment %} {% if form.errors %}
+  <p>Your username and password didn't match. Please try again.</p>
+{% endif %} {% endcomment %}
+{% include 'alerts.html' %}
+
+{% if next %}
+  {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+  {% else %}
+    <p>Please login to see this page.</p>
+  {% endif %}
+{% endif %}
+
+<form method="post" action="">
+  {% csrf_token %}
+
+  <label for="username">Username:</label><br/>
+  <input type="text" name="username" required><br/>
+
+  <label for="email" class="mt-2">E-mail:</label><br/>
+  <input type="email" name="email" required><br/>
+
+  <label for="password" class="mt-2">Password:</label><br/>
+  <input type="password" name="password" required><br/>
+
+  <label for="c_password" class="mt-2">Confirm password:</label><br/>
+  <input type="password" name="c_password" required><br/>
+
+  <button type="submit" class="btn btn-primary mt-2">Register</button>
+  <input type="hidden" name="next" value="{{ next }}" />
+  </form>
+
+{% endblock %}

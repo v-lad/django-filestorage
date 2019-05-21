@@ -1,0 +1,11 @@
+i.nav-icon {
+    font-size: 40px;
+    color: orangered;
+}
+
+span.user-link {
+    font-size: 20px;
+    color: black;
+    display: inline;
+}
+

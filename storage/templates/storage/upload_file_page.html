@@ -1,0 +1,109 @@
+{% extends 'storage/storage_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load extrafilters %}
+
+{% block page-title %}Upload file | {{ block.super }}{% endblock %}
+
+{% block additional-links %}
+  <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+  <link href="{% static 'storage/css/filepond_custom.css' %}" rel="stylesheet">
+  <link href="{% static 'storage/css/style.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+{% endblock additional-links %}
+
+{% block additional-scripts %}
+  <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+  <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+
+  <script>
+  //Filepond
+  FilePond.registerPlugin(FilePondPluginFileEncode);
+
+  const inputElement = document.querySelector('.filepond');
+  const pond = FilePond.create(inputElement, {
+    allowMultiple: true,
+    allowFileEncode: true,
+    name: "filePond"
+  });
+  </script>
+
+  <script>
+  //DateTimePicker
+    $(function () {
+      $("#datetimepicker").datetimepicker({
+        format: 'd/m/Y H:i',
+      });
+    });
+  </script>
+  
+  {% comment %} <script>
+  const form = $('#comment_form');
+  const comments_box = $('#comments-all');        
+
+  form.on('submit', function(e){
+    e.preventDefault();
+    console.log($('#comment_text').val())
+
+    console.log()
+    $.ajax({
+      url: form.attr("action"),
+      type: "POST",
+      async: true,
+      data: {
+          comment: $('#comment_text').val(),
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+      },
+      success: handleFormSuccess,
+    })
+  })
+
+  function handleFormSuccess(data){
+    console.log(data)
+    $(".comments-all").prepend(`<div class="media mb-4 ml-4 mr-5 mt-2">` +
+    `<img src="{{ user_default }}" width='64' class="mr-3" alt="...">` +
+    '<div class="media-body">' +
+      '<h6 class="mt-0"><b>'+ data.created_at + '</b></h6>' +                 
+      '<span style="word-break: break-all">'+data.message+'</span>' +
+    '</div>');
+    form[0].reset();
+    }
+  </script> {% endcomment %}
+{% endblock additional-scripts %}
+
+{% block stor-body %}
+<h2>Uploading files</h2>
+
+<form action="" enctype="multipart/form-data" method="POST">
+  {% csrf_token %}
+  
+  {% render_field form.upload type="file" class="filepond" name="filepond[]" data-max-file-size="3MB" data-max-files="3" multiple="multiple" %}
+  <div class='dc'>
+    <div>
+      {% comment %} Deadline: {% endcomment %}
+      {% render_field form.time class+='deadline form-control' type="text" id="datetimepicker" name="deadline" placeholder="Pick delete time" %}
+    </div>
+    <button type="submit" class="btn btn-warning mt-2 mb-2 but1">Submit</button>
+  </div>
+</form>
+
+{% if user.is_authenticated %}
+  <h4>Your files:</h4>
+  <ul class="files_list list-group">
+    {% for file in user.uploadedfilemodel_set.all %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div><a href="#" class="mr-1">{{ file }}</a>, {{file.size}} bytes</div>
+
+        <form action="/{{file.slug}}/delete" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger btn-sm">
+            <i class="material-icons">delete</i>
+          </button>
+        </form>
+
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+{% endblock stor-body %}
