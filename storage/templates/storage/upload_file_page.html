@@ -9,21 +9,25 @@
   <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
   <link href="{% static 'storage/css/filepond_custom.css' %}" rel="stylesheet">
   <link href="{% static 'storage/css/style.css' %}" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
 {% endblock additional-links %}
 
 {% block additional-scripts %}
   <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
   <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+  <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
 
   <script>
   //Filepond
   FilePond.registerPlugin(FilePondPluginFileEncode);
+  FilePond.registerPlugin(FilePondPluginFileValidateSize);
 
   const inputElement = document.querySelector('.filepond');
   const pond = FilePond.create(inputElement, {
     allowMultiple: true,
+    allowFileSizeValidation: true,
     allowFileEncode: true,
+    maxTotalFileSize: "30MB",
+    //maxFileSize: "10MB",
     name: "filePond"
   });
   </script>
@@ -35,7 +39,7 @@
 <form action="" enctype="multipart/form-data" method="POST">
   {% csrf_token %}
   
-  {% render_field form.upload type="file" class="filepond" name="filepond[]" data-max-file-size="3MB" data-max-files="3" multiple="multiple" %}
+  {% render_field form.upload type="file" class="filepond" name="filepond[]" data-max-files="3" multiple="multiple" %}
   <div class='dc'>
     <div>
       How much days it will be stored?

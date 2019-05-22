@@ -10,3 +10,7 @@ form div.dc div{
 form div.dc{
     text-align:center;
 }
+
+ul.act-buttons {
+    max-width: 300px;
+}

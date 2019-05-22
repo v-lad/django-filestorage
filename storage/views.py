@@ -1,8 +1,5 @@
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect
 from django.views import View
-from storage.forms import UploadForm
-from django.contrib.auth.models import User
-from django.contrib import messages
 from .forms import UploadForm
 from .models import UploadedFileModel, generate_slug
 
@@ -10,7 +7,6 @@ import datetime
 import json
 import base64
 from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from pprint import pprint
 
@@ -23,13 +19,8 @@ class UploadFileView(View):
         return render(request, 'storage/upload_file_page.html', context=context)
 
     def post(self, request):
-        # print()
-        # pprint(request.POST)
-        # print()
-
         form = UploadForm(request.POST)
-        
-        # pprint(form.errors)
+
         if form.is_valid():
             data = form.cleaned_data
             user = request.user
@@ -56,10 +47,24 @@ class UploadFileView(View):
         else:
             return render(request, 'storage/upload_file_page.html', context={'form': form})
 
+
 class UploadedFileDetailView(View):
     def get(self, request, slug):
         file = UploadedFileModel.objects.get(slug=slug)
-        return render(request, 'storage/file_info_page.html', {"file": file})
+        upload_date = file.upload_time
+        dl = file.deadline
+
+        deletes_at = upload_date + datetime.timedelta(days=dl)
+        days_until_delete = deletes_at - datetime.date.today()
+
+        context = {
+            "file": file,
+            "deletes_at": deletes_at,
+            "days_until_delete": days_until_delete.days,
+        }
+
+        return render(request, 'storage/file_info_page.html', context=context)
+
 
 class DeleteFileView(View):
     def post(self, request, slug):
@@ -67,36 +72,3 @@ class DeleteFileView(View):
         file.delete()
 
         return redirect("/")
-
-def register(request):
-    if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        c_password = request.POST['c_password']
-
-        # Check passwords matching
-        if password != c_password:
-            messages.error(request, "Passwords don`t match.")
-            return redirect('/accounts/register')
-        else:
-            if User.objects.filter(username=username).exists(): 
-                messages.error(request, "Someone have already taken that username.")
-                return redirect('/accounts/register')
-            else:
-                if User.objects.filter(email=email).exists(): 
-                    messages.error(request, "That email is being used.")
-                    return redirect('/accounts/register')
-                else:
-                    user = User.objects.create_user(
-                        username=username,
-                        email=email,
-                        password=password,
-                    )
-
-                    user.save()
-                    messages.success(request, f"User \"{username}\" has created. You can login now")
-                    return redirect('login')
-        
-    else:
-        return render(request, 'registration/register.html')

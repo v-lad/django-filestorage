@@ -1,30 +1,37 @@
 {% extends 'storage/storage_base.html' %}
+{% load static %}
+{% load l10n %}
 
 {% block page-title %} {{ file }} | {{ block.super }} {% endblock %}
 
 {% block stor-body %}
-  <p>{{ file }}</p>
-  <p>{{ file.size }}</p>
-  <p>{{ file.upload_time }}</p>
-  <p>{{ file.deadline }}</p>
+  <h3>{{ file }}</h3>
+  <p>Size: <strong>{{ file.size }} bytes</strong></p>
+  {% localize on %}
+    <p>Uploaded: <strong>{{ file.upload_time }}</strong></p>
+    <p>Deletes at <strong>{{ deletes_at }}</strong></p>
+  {% endlocalize %}  
+  <p>Days until delete: <strong>{{ days_until_delete }}</strong></p>
 
-
-  <ul class="files_list list-group">
+  <ul class="files_list list-group act-buttons">
     <li class="list-group-item d-flex justify-content-between align-items-center">
       <form action="/{{file.slug}}/delete" method="POST">
         {% csrf_token %}
-        <button type="submit" class="btn btn-danger btn-sm">
+        <button type="submit" class="btn btn-danger btn-sm" title="delete now">
           <i class="material-icons">delete</i>
         </button>
       </form>
 
-      <form method="POST">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-primary btn-sm">
+      <a href="{{ file.file.url }}" download>
+        <button type="button" class="btn btn-primary btn-sm" title="download">
           <i class="material-icons">arrow_downward</i>
         </button>
-      </form>
+      </a>
     </li>
   </ul>
 
 {% endblock stor-body %}
+
+{% block additional-links %}
+<link href="{% static 'storage/css/style.css' %}" rel="stylesheet">
+{% endblock additional-links %}
