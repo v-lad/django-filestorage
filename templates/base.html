@@ -28,15 +28,7 @@
         <li class="nav-item active">
           <a class="nav-link" href="/">Upload <span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Features</a>
-        </li>
       </ul>
-      {% comment %} <a class="nav-link" href="#">
-        <i class="material-icons nav-icon">
-          perm_identity
-        </i>
-      </a> {% endcomment %}
       {% if user.is_authenticated %}
         
         <span class="user-link">Hello, {{ user.username }}</span>

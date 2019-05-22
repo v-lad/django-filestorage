@@ -1,0 +1,30 @@
+{% extends 'storage/storage_base.html' %}
+
+{% block page-title %} {{ file }} | {{ block.super }} {% endblock %}
+
+{% block stor-body %}
+  <p>{{ file }}</p>
+  <p>{{ file.size }}</p>
+  <p>{{ file.upload_time }}</p>
+  <p>{{ file.deadline }}</p>
+
+
+  <ul class="files_list list-group">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <form action="/{{file.slug}}/delete" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-sm">
+          <i class="material-icons">delete</i>
+        </button>
+      </form>
+
+      <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-sm">
+          <i class="material-icons">arrow_downward</i>
+        </button>
+      </form>
+    </li>
+  </ul>
+
+{% endblock stor-body %}

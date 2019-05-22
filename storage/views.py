@@ -51,25 +51,20 @@ class UploadFileView(View):
 
                 instance.save()
 
-            # pprint(form.cleaned_data)
-            # print()
             return redirect('/')
         
         else:
             return render(request, 'storage/upload_file_page.html', context={'form': form})
 
 class UploadedFileDetailView(View):
-    pass
+    def get(self, request, slug):
+        file = UploadedFileModel.objects.get(slug=slug)
+        return render(request, 'storage/file_info_page.html', {"file": file})
 
 class DeleteFileView(View):
     def post(self, request, slug):
         file = UploadedFileModel.objects.get(slug=slug)
         file.delete()
-        print()
-        pprint(request.POST)
-        print()
-        pprint(request.body)
-        print()
 
         return redirect("/")
 
