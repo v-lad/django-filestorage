@@ -4,10 +4,11 @@ import uuid
 from django.utils.text import slugify
 
 def generate_slug(s):
-    return slugify(s) + "-" + str(uuid.uuid4())
+    return slugify(s[:10 if len(s) > 10 else -1]) + "-" + str(uuid.uuid4())
 
 def user_directory_path(instance, filename):
-    return 'uploads/{0}/{1}'.format(instance.user.username, filename)
+    folder = instance.user.username if instance.user else 'anon_usr'
+    return 'uploads/{0}/{1}'.format(folder, filename)
 
 class UploadedFileModel(models.Model):
     slug = models.SlugField(max_length=50, unique=True)    
@@ -25,3 +26,7 @@ class UploadedFileModel(models.Model):
         self.file.delete()
         super().delete(*args, **kwargs)
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("storage:file_info", kwargs={"slug": self.slug})
+    

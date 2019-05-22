@@ -37,12 +37,17 @@ class UploadFileView(View):
                     file=file_data,
                     size=file['size'],
                     deadline=dl,
-                    user=user
                 )
+
+                if user.is_authenticated:
+                    instance.user = user
 
                 instance.save()
 
-            return redirect('/')
+            if user.is_authenticated:
+                return redirect('/')
+
+            return redirect(instance)
         
         else:
             return render(request, 'storage/upload_file_page.html', context={'form': form})
