@@ -13,7 +13,7 @@ class Command(BaseCommand):
 
         # Looking for overdue files
         overdue = filter(
-            lambda f: f.upload_time + datetime.timedelta(days=f.deadline+1) < datetime.date.today(), 
+            lambda f: f.upload_time + datetime.timedelta(days=f.deadline) < datetime.date.today(), 
             files
             )
         
