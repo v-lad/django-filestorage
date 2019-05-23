@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import UploadForm
 from .models import UploadedFileModel, generate_slug
@@ -75,7 +75,7 @@ class UploadedFileDetailView(View):
     """
 
     def get(self, request, slug):
-        file = UploadedFileModel.objects.get(slug=slug)
+        file = get_object_or_404(UploadedFileModel, slug=slug)
         upload_date = file.upload_time
         dl = file.deadline
 
@@ -97,7 +97,7 @@ class DeleteFileView(View):
     """
 
     def post(self, request, slug):
-        file = UploadedFileModel.objects.get(slug=slug)
+        file = get_object_or_404(UploadedFileModel, slug=slug)
         file.delete()
 
         return redirect("/")
