@@ -3,10 +3,15 @@ from storage.models import UploadedFileModel
 import datetime
 
 class Command(BaseCommand):
+    """
+    Custom Django management command for deleting overdue files.
+    """
     help = 'Deletes all overdue files'
 
     def handle(self, *args, **options):
         files = UploadedFileModel.objects.all()
+
+        # Looking for overdue files
         overdue = filter(
             lambda f: f.upload_time + datetime.timedelta(days=f.deadline+1) < datetime.date.today(), 
             files

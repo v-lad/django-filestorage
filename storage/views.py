@@ -11,6 +11,14 @@ from django.core.files.base import ContentFile
 from pprint import pprint
 
 class UploadFileView(View):
+    """
+    Display upload files page with upload form 'UploadForm' and
+    uploaded files, if user is authenticated. If user isn`t 
+    authenticated, he will be redirected at uploaded file detail
+    page as form will have submitted (unauthorized users can 
+    upload only one file at a time). 
+    """
+
     def get(self, request):
         form = UploadForm()
         context = {
@@ -27,6 +35,7 @@ class UploadFileView(View):
             dl = data['time']
             uploads = request.POST.getlist('upload')
             
+            # Handling uploaded files (decoding from Base64 and storing to db)
             for file in uploads:
                 file = json.loads(file)
                 name = file['name']
@@ -43,10 +52,12 @@ class UploadFileView(View):
                     instance.user = user
 
                 instance.save()
-
+            
+            # If user is authenticated redirecting back to upload files page
             if user.is_authenticated:
                 return redirect('/')
 
+            # Otherwise, it`ll redirect to uploaded file detail page
             return redirect(instance)
         
         else:
@@ -54,6 +65,15 @@ class UploadFileView(View):
 
 
 class UploadedFileDetailView(View):
+    """
+    Display an individual file info
+
+    Context:
+      file: UploadedFileModel instance
+      deletes_at: file deleting date
+      days_until_delete: count of days left
+    """
+
     def get(self, request, slug):
         file = UploadedFileModel.objects.get(slug=slug)
         upload_date = file.upload_time
@@ -72,6 +92,10 @@ class UploadedFileDetailView(View):
 
 
 class DeleteFileView(View):
+    """
+    Delete file through POST request
+    """
+
     def post(self, request, slug):
         file = UploadedFileModel.objects.get(slug=slug)
         file.delete()

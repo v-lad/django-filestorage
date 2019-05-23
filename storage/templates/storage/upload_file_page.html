@@ -32,13 +32,18 @@
   </script>
 {% endblock additional-scripts %}
 
-{% block stor-body %}
+{% block content %}
 <h2>Uploading files</h2>
 
 <form action="" enctype="multipart/form-data" method="POST">
   {% csrf_token %}
   
-  {% render_field form.upload type="file" class="filepond" name="filepond[]" data-max-files="3" multiple="multiple" %}
+  {% if user.is_authenticated %}
+    {% render_field form.upload type="file" class="filepond" name="filepond[]" data-max-files="3" multiple="multiple" %}
+  {% else %}
+    {% render_field form.upload type="file" class="filepond" name="filepond[]" data-max-files="1" multiple="multiple" %}
+  {% endif %}
+
   <div class='dc'>
     <div>
       How much days it will be stored?
@@ -66,4 +71,4 @@
     {% endfor %}
   </ul>
 {% endif %}
-{% endblock stor-body %}
+{% endblock content %}

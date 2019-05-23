@@ -12,8 +12,6 @@
       rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
   {% block additional-links %}{% endblock %}
-
- <style>{% block additional-style %}{% endblock %}</style>
 </head>
 <body>
 
@@ -53,7 +51,7 @@
   <div class="container mt-5">
     <div class="row">
       <div class="col-md-10 offset-md-1">
-        {% block stor-body %}{% endblock %}
+        {% block content %}{% endblock %}
       </div>
   </div>
 

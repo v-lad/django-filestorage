@@ -1,4 +1,5 @@
-/* the background color of the filepond drop area */
+/* Custom styles for Filepond drop area */
+
 div.filepond--panel-root {
     background-color: #ff864c;
     border: 2px dashed #ff491c;

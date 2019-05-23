@@ -4,7 +4,7 @@
 
 {% block page-title %} {{ file }} | {{ block.super }} {% endblock %}
 
-{% block stor-body %}
+{% block content %}
   <h3>{{ file }}</h3>
   <p>Size: <strong>{{ file.size }} bytes</strong></p>
   {% localize on %}
@@ -30,7 +30,7 @@
     </li>
   </ul>
 
-{% endblock stor-body %}
+{% endblock content %}
 
 {% block additional-links %}
 <link href="{% static 'storage/css/style.css' %}" rel="stylesheet">

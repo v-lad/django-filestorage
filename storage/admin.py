@@ -13,14 +13,13 @@ class UploadedFileModelInline(admin.TabularInline):
 
 @admin.register(UploadedFileModel)
 class UploadedFileModelAdmin(admin.ModelAdmin):
-    readonly_fields = ('upload_time',)
+    readonly_fields = ('upload_time', 'user')
     fieldsets = (
         ('', {
             'classes': ('extrapretty'),
-            'fields': ('file',)
+            'fields': ('file', 'user')
         }),
         ('Date', {
-            'classes': ('collapse',),
             'fields': ('upload_time', 'deadline')
         }),
     )
