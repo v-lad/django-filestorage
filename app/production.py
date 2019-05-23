@@ -1,7 +1,7 @@
 from .settings import *
 
 
-DEBUG = False
+DEBUG = os.environ['DEBUG_ON']
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
