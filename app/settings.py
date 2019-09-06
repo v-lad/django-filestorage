@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
 
     'storage',
+    'storages'
 ]
 
 MIDDLEWARE = [
